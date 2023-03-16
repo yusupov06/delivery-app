@@ -2,9 +2,9 @@ server:
   port: 8090
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/deliveryapp
+    url: jdbc:postgresql://containers-us-west-156.railway.app:6324/railway
     username: postgres
-    password: 2002
+    password: mGlXdnkhhVThDSi8fV6M
     driver-class-name: org.postgresql.Driver
 
   jpa:

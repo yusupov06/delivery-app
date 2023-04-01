@@ -1,4 +1,4 @@
-//package uz.md.shopapp.service;
+package uz.md.shopapp.service;//package uz.md.shopapp.service;
 //
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;

@@ -2,16 +2,10 @@ package uz.md.shopapp.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
 import uz.md.shopapp.domain.enums.PermissionEnum;
-import uz.md.shopapp.domain.template.AbsLongEntity;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @AllArgsConstructor

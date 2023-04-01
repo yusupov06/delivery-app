@@ -3,8 +3,6 @@ package uz.md.shopapp.dtos.order;
 
 import lombok.*;
 import uz.md.shopapp.domain.enums.OrderStatus;
-import uz.md.shopapp.dtos.address.AddressDTO;
-import uz.md.shopapp.dtos.institution.InstitutionInfoDTO;
 import uz.md.shopapp.dtos.institution.LocationDto;
 import uz.md.shopapp.dtos.orderProduct.OrderProductDTO;
 

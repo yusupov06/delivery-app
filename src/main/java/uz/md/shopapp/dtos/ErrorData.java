@@ -2,7 +2,6 @@ package uz.md.shopapp.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.springframework.http.ResponseEntity;
 
 @Getter
 @Setter

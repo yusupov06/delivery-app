@@ -12,8 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.md.shopapp.service.contract.TelegramBotService;
 import uz.md.shopapp.utils.AppConstants;
 
-import static uz.md.shopapp.utils.AppConstants.GET_CHAT_ID_CMD;
-
 @RestController
 @RequestMapping(TelegrambotController.BASE_URL)
 @RequiredArgsConstructor
@@ -29,10 +27,7 @@ public class TelegrambotController {
         if (message == null || !message.isUserMessage())
             return;
         Long chatId = message.getChatId();
-        if(message.getText().equals(GET_CHAT_ID_CMD))
-            telegrambotService.sendChatId(chatId);
-        else
-            telegrambotService.sendBotWebApp(chatId);
+        telegrambotService.sendBotWebApp(chatId);
     }
 }
 

@@ -2,7 +2,6 @@ package uz.md.shopapp.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.LifecycleState;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import uz.md.shopapp.domain.template.AbsLongEntity;

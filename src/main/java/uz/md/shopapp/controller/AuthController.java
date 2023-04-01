@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.*;
 import uz.md.shopapp.dtos.ApiResult;
 import uz.md.shopapp.dtos.TokenDTO;
-import uz.md.shopapp.dtos.user.EmployeeRegisterDTO;
 import uz.md.shopapp.dtos.user.ClientLoginDTO;
 import uz.md.shopapp.dtos.user.EmployeeLoginDTO;
+import uz.md.shopapp.dtos.user.EmployeeRegisterDTO;
 import uz.md.shopapp.service.contract.AuthService;
 import uz.md.shopapp.utils.AppConstants;
 

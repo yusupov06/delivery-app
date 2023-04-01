@@ -4,7 +4,6 @@ import uz.md.shopapp.dtos.ApiResult;
 import uz.md.shopapp.dtos.address.AddressAddDTO;
 import uz.md.shopapp.dtos.address.AddressDTO;
 import uz.md.shopapp.dtos.order.OrderDTO;
-import uz.md.shopapp.dtos.user.ClientDto;
 import uz.md.shopapp.dtos.user.ClientMeDto;
 
 import java.util.List;

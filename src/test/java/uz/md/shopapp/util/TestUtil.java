@@ -122,7 +122,6 @@ public final class TestUtil {
                     "nameRu" + (i + 1),
                     "description",
                     "description",
-                    "https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
                     Location.builder()
                             .latitude(15.0)
                             .longitude(15.0)

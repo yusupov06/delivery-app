@@ -6,7 +6,6 @@ import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomUtils;
 import uz.md.shopapp.domain.*;
 import uz.md.shopapp.domain.enums.PermissionEnum;
-import uz.md.shopapp.dtos.user.UserDTO;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -97,7 +96,7 @@ public class Mock {
                 .build();
     }
 
-    public static User getEmployeeUser() {
+    public static User getMockEmployee() {
         Role adminRole = getAdminRole();
         User user = getUser();
         user.setRole(adminRole);
@@ -145,4 +144,5 @@ public class Mock {
                 .type(institutionType)
                 .build();
     }
+
 }

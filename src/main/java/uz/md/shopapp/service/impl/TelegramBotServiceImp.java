@@ -31,25 +31,14 @@ public class TelegramBotServiceImp implements TelegramBotService {
     @Override
     public void sendOrderToGroup(OrderSendToBotDTO order) {
 
-        SendMessage orderInfo = getOrderInfo(order, GROUP_CHAT_ID);
+        SendMessage orderInfo = getOrderInfo(order);
         LocationDto locationDto = order.getLocation();
         Location location = new Location();
         location.setLatitude(locationDto.getLatitude());
         location.setLongitude(locationDto.getLongitude());
 
         restTemplate.postForObject(TELEGRAM_SEND_MESSAGE_URL, orderInfo, Object.class);
-        orderInfo.setChatId(order.getManagerChatId());
-        restTemplate.postForObject(TELEGRAM_SEND_MESSAGE_URL, orderInfo, Object.class);
-        restTemplate.postForObject(TELEGRAM_SEND_LOCATION_URL + GROUP_CHAT_ID, location, Object.class);
-        restTemplate.postForObject(TELEGRAM_SEND_LOCATION_URL + order.getManagerChatId(), location, Object.class);
-    }
-
-    @Override
-    public void sendChatId(Long chatId) {
-        SendMessage message = new SendMessage();
-        message.setText(chatId.toString());
-        message.setChatId(chatId);
-        restTemplate.postForObject(TELEGRAM_SEND_MESSAGE_URL, message, Object.class);
+        restTemplate.postForObject(TELEGRAM_SEND_LOCATION_URL, location, Object.class);
     }
 
     private SendMessage getWebAppLink(Long chatId){
@@ -66,7 +55,7 @@ public class TelegramBotServiceImp implements TelegramBotService {
         return sendMessage;
     }
 
-    private SendMessage getOrderInfo(OrderSendToBotDTO order, String chatId){
+    private SendMessage getOrderInfo(OrderSendToBotDTO order){
         StringBuilder orderMessage = new StringBuilder();
         orderMessage.append("========= BUYURTMA =========\n\n");
         orderMessage.append("****").append(order.getInstitutionName())
@@ -83,7 +72,7 @@ public class TelegramBotServiceImp implements TelegramBotService {
                 .append("\n Yetkazib berish sanasi : ").append(order.getDeliveryTime().toLocalDate())
                 .append("\n Yetkazib berish vaqti : ").append(order.getDeliveryTime().toLocalTime());
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
+        sendMessage.setChatId(GROUP_CHAT_ID);
         sendMessage.setText(orderMessage.toString());
         return sendMessage;
     }

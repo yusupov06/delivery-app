@@ -3,7 +3,6 @@ package uz.md.shopapp.service.contract;
 import uz.md.shopapp.dtos.ApiResult;
 import uz.md.shopapp.dtos.order.OrderAddDTO;
 import uz.md.shopapp.dtos.order.OrderDTO;
-import uz.md.shopapp.dtos.request.SimpleSearchRequest;
 import uz.md.shopapp.dtos.request.SimpleSortRequest;
 
 import java.util.List;

@@ -9,7 +9,6 @@ import uz.md.shopapp.domain.Category;
 import uz.md.shopapp.dtos.category.CategoryInfoDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {

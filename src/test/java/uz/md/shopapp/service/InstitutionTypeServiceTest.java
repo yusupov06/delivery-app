@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import uz.md.shopapp.WithManager;
 import uz.md.shopapp.domain.InstitutionType;
+import uz.md.shopapp.domain.Role;
+import uz.md.shopapp.domain.User;
 import uz.md.shopapp.dtos.ApiResult;
 import uz.md.shopapp.dtos.institution_type.InstitutionTypeAddDTO;
 import uz.md.shopapp.dtos.institution_type.InstitutionTypeDTO;
@@ -14,11 +17,14 @@ import uz.md.shopapp.dtos.institution_type.InstitutionTypeEditDTO;
 import uz.md.shopapp.exceptions.AlreadyExistsException;
 import uz.md.shopapp.exceptions.NotFoundException;
 import uz.md.shopapp.repository.InstitutionTypeRepository;
+import uz.md.shopapp.repository.RoleRepository;
+import uz.md.shopapp.repository.UserRepository;
 import uz.md.shopapp.service.contract.InstitutionTypeService;
 import uz.md.shopapp.util.Mock;
 import uz.md.shopapp.util.TestUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,14 +46,40 @@ public class InstitutionTypeServiceTest {
 
     @Autowired
     private InstitutionTypeRepository institutionTypeRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+
+    private User manager;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void setup() {
         institutionType = Mock.getInstitutionType();
     }
 
+    public void addManager(){
+        manager = Mock.getMockEmployee();
+        manager.setPhoneNumber("+998941001010");
+        manager.setPassword("123");
+        Optional<Role> roleOptional = roleRepository.findByName(manager.getRole().getName());
+        if (roleOptional.isPresent())
+            manager.setRole(roleOptional.get());
+        else
+            manager.setRole(roleRepository.saveAndFlush(manager.getRole()));
+    }
+
+    public void addAndSaveManager(){
+       addManager();
+       userRepository.saveAndFlush(manager);
+    }
+
+
+
     @Test
+    @WithManager
     void shouldAddInstitutionType() {
+        addAndSaveManager();
         InstitutionTypeAddDTO addDTO = new InstitutionTypeAddDTO(
                 ADDING_NAME_UZ,
                 ADDING_NAME_RU,
@@ -67,7 +99,9 @@ public class InstitutionTypeServiceTest {
     }
 
     @Test
+    @WithManager
     void shouldNotAddAlreadyExistedName1() {
+        addAndSaveManager();
         institutionTypeRepository.saveAndFlush(institutionType);
         InstitutionTypeAddDTO addDTO = new InstitutionTypeAddDTO(
                 institutionType.getNameUz(),
@@ -79,7 +113,9 @@ public class InstitutionTypeServiceTest {
     }
 
     @Test
+    @WithManager
     void shouldNotAddAlreadyExistedName2() {
+        addAndSaveManager();
         institutionTypeRepository.saveAndFlush(institutionType);
         InstitutionTypeAddDTO addDTO = new InstitutionTypeAddDTO(
                 ADDING_NAME_UZ,
@@ -112,7 +148,10 @@ public class InstitutionTypeServiceTest {
     }
 
     @Test
+    @WithManager
     void shouldEdit() {
+        addAndSaveManager();
+
         institutionTypeRepository.deleteAll();
         institutionTypeRepository.saveAndFlush(institutionType);
         InstitutionTypeEditDTO editDTO = new InstitutionTypeEditDTO(
@@ -135,7 +174,10 @@ public class InstitutionTypeServiceTest {
     }
 
     @Test
+    @WithManager
     void shouldNotEditNotFountType() {
+        addAndSaveManager();
+
         InstitutionTypeEditDTO editDTO = new InstitutionTypeEditDTO(
                 ADDING_NAME_UZ,
                 ADDING_NAME_RU,
@@ -147,7 +189,10 @@ public class InstitutionTypeServiceTest {
     }
 
     @Test
+    @WithManager
     void shouldNotEditToAlreadyExistedName() {
+        addAndSaveManager();
+
         institutionTypeRepository.saveAndFlush(institutionType);
         institutionTypeRepository.saveAndFlush(new InstitutionType("n", "r", "du", "dr"));
         InstitutionTypeEditDTO editDTO = new InstitutionTypeEditDTO(
@@ -217,14 +262,20 @@ public class InstitutionTypeServiceTest {
     }
 
     @Test
+    @WithManager
     void shouldDelete() {
+        addAndSaveManager();
+
         institutionTypeRepository.saveAndFlush(institutionType);
         ApiResult<Void> delete = institutionTypeService.delete(institutionType.getId());
         assertTrue(delete.isSuccess());
     }
 
     @Test
+    @WithManager
     void shouldNotDeleteNotFound() {
+        addAndSaveManager();
+
         assertThrows(NotFoundException.class, () -> institutionTypeService.delete(15L));
     }
 

@@ -4,7 +4,6 @@ import lombok.*;
 import uz.md.shopapp.domain.enums.PermissionEnum;
 
 import java.util.Set;
-import java.util.UUID;
 
 @AllArgsConstructor
 @Getter

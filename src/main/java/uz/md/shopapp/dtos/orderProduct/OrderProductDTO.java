@@ -1,6 +1,5 @@
 package uz.md.shopapp.dtos.orderProduct;
 
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.*;
 import uz.md.shopapp.dtos.product.ProductDTO;
 

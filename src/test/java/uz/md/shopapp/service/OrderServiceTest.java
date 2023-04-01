@@ -1,9 +1,10 @@
-//package uz.md.shopapp.service;
+package uz.md.shopapp.service;//package uz.md.shopapp.service;
 //
 //
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.data.domain.Sort;
 //import org.springframework.test.context.ActiveProfiles;
 //import org.springframework.transaction.annotation.Transactional;
@@ -23,18 +24,19 @@
 //import uz.md.shopapp.exceptions.NotFoundException;
 //import uz.md.shopapp.repository.*;
 //import uz.md.shopapp.service.contract.OrderService;
+//import uz.md.shopapp.util.Mock;
 //
 //import java.util.*;
 //
 //import static org.junit.jupiter.api.Assertions.*;
 //
-//@IntegrationTest
+//@SpringBootTest
 //@Transactional
 //@ActiveProfiles("test")
 //public class OrderServiceTest {
 //
 //    private static final OrderStatus ORDER_STATUS = OrderStatus.PREPARING;
-//    private static final Double OVERALL_PRICE = 800.0;
+//    private static final Long OVERALL_PRICE = 800L;
 //
 //    private static final String USER_FIRST_NAME = "Ali";
 //    private static final String USER_LAST_NAME = "Ali";
@@ -49,7 +51,7 @@
 //
 //    private Order order;
 //    private User user;
-//    private Address address;
+//    private Location location;
 //    private Category category;
 //
 //    @Autowired
@@ -62,6 +64,8 @@
 //    private CategoryRepository categoryRepository;
 //    @Autowired
 //    private ProductRepository productRepository;
+//    @Autowired
+//    private LocationRepository locationRepository;
 //
 //    @BeforeEach
 //    public void init() {
@@ -78,16 +82,11 @@
 //                roleRepository
 //                        .save(new Role("ADMIN",
 //                                "description",
-//                                Set.of(PermissionEnum.values()))),
-//                true));
+//                                Set.of(PermissionEnum.values())))));
 //        order.setUser(user);
-//        address = addressRepository
-//                .save(new Address(user,
-//                        45,
-//                        "street",
-//                        "Tashkent"));
-//        order.setAddress(addressRepository
-//                .saveAndFlush(address));
+//        location = locationRepository
+//                .save(Mock.getLocation());
+//        order.setLocation(location);
 //    }
 //
 //    @Test
@@ -102,7 +101,8 @@
 //        assertEquals(data.getOverallPrice(), order.getOverallPrice());
 //        assertEquals(data.getStatus(), order.getStatus());
 //        assertEquals(data.getUserId(), order.getUser().getId());
-//        assertEquals(data.getAddress().getId(), order.getAddress().getId());
+//        assertEquals(data.getLocation().getLatitude(), order.getLocation().getLatitude());
+//        assertEquals(data.getLocation().getLongitude(), order.getLocation().getLongitude());
 //    }
 //
 //    @Test
@@ -114,10 +114,10 @@
 //    @Test
 //    @Transactional
 //    void shouldAddWithUserAddedAddress() {
-//        Category category = categoryRepository.saveAndFlush(new Category("category", "description"));
-//        Address address1 = address;
+//        Category category = categoryRepository.saveAndFlush(new Category("category","","", "description"));
+//        Location location1 = location;
 //        List<Product> products = productRepository.saveAllAndFlush(List.of(
-//                new Product("product1", "description", 500.0, category),
+//                new Product("product1","","", "description", 500.0, category),
 //                new Product("product1", "description", 500.0, category)
 //        ));
 //

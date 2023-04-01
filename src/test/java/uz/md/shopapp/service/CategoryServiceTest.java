@@ -1,12 +1,12 @@
 package uz.md.shopapp.service;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,29 +44,41 @@ public class CategoryServiceTest {
     private Category category;
 
     private Institution institution;
-
     private InstitutionType institutionType;
-
     private User manager;
-
-    private Location location;
 
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private InstitutionRepository institutionRepository;
     @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private InstitutionTypeRepository institutionTypeRepository;
     @Autowired
     private LocationRepository locationRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     public void init() {
+        manager = User.builder()
+                .phoneNumber("+998941001010")
+                .firstName("manager")
+                .role(roleRepository.findByName("MANAGER")
+                        .orElse(null)
+                )
+                .password(passwordEncoder.encode("123"))
+                .build();
+
         institution = Mock.getInstitution();
+        institutionType = institution.getType();
+
+        userRepository.save(manager);
+        institution.setManager(manager);
+        locationRepository.saveAndFlush(institution.getLocation());
         institutionTypeRepository.saveAndFlush(institution.getType());
         institutionRepository.saveAndFlush(institution);
         category = Mock.getCategory(institution);
@@ -124,7 +136,6 @@ public class CategoryServiceTest {
         assertThrows(AlreadyExistsException.class, () -> categoryService.add(addDTO));
     }
 
-    // TODO: 2/18/2023 Add mock user to security context and test for permission to add
 
     @Test
     @Transactional
@@ -300,8 +311,7 @@ public class CategoryServiceTest {
                         "another",
                         "",
                         "",
-                        "https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
-                        new Location(12.0, 12.0),
+                        locationRepository.saveAndFlush(new Location(12.0, 12.0)),
                         institutionType,
                         manager));
 
@@ -334,7 +344,6 @@ public class CategoryServiceTest {
                         "another",
                         "",
                         "",
-                        "https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
                         locationRepository
                                 .saveAndFlush(new Location(15.0, 18.0)),
                         institutionType,
@@ -370,7 +379,6 @@ public class CategoryServiceTest {
                         "another",
                         "",
                         "",
-                        "https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
                         locationRepository
                                 .saveAndFlush(new Location(15.0, 18.0)),
                         institutionType,
@@ -403,14 +411,14 @@ public class CategoryServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "+998941001010", password = "123", authorities = {"ADD_CATEGORY, GET_CATEGORY"})
+    @WithMockUser(username = "+998941001010", password = "123")
     void shouldNotDeleteByIdNotExisted() {
         categoryRepository.saveAllAndFlush(TestUtil.generateMockCategories(3, institution));
         assertThrows(NotFoundException.class, () -> categoryService.delete(150L));
     }
 
     @Test
-    @WithMockUser(username = "+998941001010", password = "123", authorities = {"ADD_CATEGORY, GET_CATEGORY"})
+    @WithMockUser(username = "+998941001010", password = "123")
     void shouldDeleteCategoryAndItsProducts() {
         productRepository.deleteAll();
         categoryRepository.saveAndFlush(category);

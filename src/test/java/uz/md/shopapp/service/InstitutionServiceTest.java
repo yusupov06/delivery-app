@@ -204,7 +204,7 @@ public class InstitutionServiceTest {
                 "description",
                 "description",
                 null,
-                Mock.getLocation(),
+                locationRepository.saveAndFlush(Mock.getLocation()),
                 institutionType,
                 null,
                 manager));
@@ -229,6 +229,9 @@ public class InstitutionServiceTest {
     void shouldGetAll() {
 
         List<Institution> institutions = TestUtil.generateMockInstitutions(3, institutionType, manager);
+        institutions
+                .forEach(institution1 -> locationRepository.saveAndFlush(institution1.getLocation()));
+
         institutions = institutionRepository.saveAllAndFlush(institutions);
         ApiResult<List<InstitutionDTO>> all = institutionService.getAll();
 
@@ -257,7 +260,7 @@ public class InstitutionServiceTest {
     void shouldGetAllByTypeId() {
 
         List<Institution> institutions = TestUtil.generateMockInstitutions(3, institutionType, manager);
-
+        institutions.forEach(institution1 -> locationRepository.saveAndFlush(institution1.getLocation()));
         institutions = institutionRepository.saveAllAndFlush(institutions);
 
         InstitutionType anotherType = institutionTypeRepository
@@ -266,7 +269,6 @@ public class InstitutionServiceTest {
                 "another",
                 "desc",
                 "desc",
-                "https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
                 locationRepository
                         .saveAndFlush(new Location(15.0, 15.0)),
                 anotherType,
@@ -285,6 +287,7 @@ public class InstitutionServiceTest {
     void shouldGetAllByManagerId() {
 
         List<Institution> institutions = TestUtil.generateMockInstitutions(4, institutionType, manager);
+        institutions.forEach(institution1 -> locationRepository.saveAndFlush(institution1.getLocation()));
         institutions = institutionRepository.saveAllAndFlush(institutions);
 
         User anotherManager = userRepository
@@ -298,7 +301,6 @@ public class InstitutionServiceTest {
                 "another",
                 "desc",
                 "desc",
-                "https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
                 locationRepository
                         .saveAndFlush(new Location(15.0, 15.0)),
                 institutionType,
@@ -317,6 +319,7 @@ public class InstitutionServiceTest {
     void shouldGetAllByPage() {
 
         List<Institution> institutions = TestUtil.generateMockInstitutions(10, institutionType, manager);
+        institutions.forEach(institution1 -> locationRepository.saveAndFlush(institution1.getLocation()));
         institutions = institutionRepository.saveAllAndFlush(institutions);
         ApiResult<List<InstitutionInfoDTO>> all = institutionService
                 .getAllForInfoByPage("0-4");
@@ -332,6 +335,9 @@ public class InstitutionServiceTest {
     void shouldGetAllByPage2() {
 
         List<Institution> institutions = TestUtil.generateMockInstitutions(10, institutionType, manager);
+
+        institutions.forEach(institution1 -> locationRepository.saveAndFlush(institution1.getLocation()));
+
         institutions = institutionRepository.saveAllAndFlush(institutions);
         ApiResult<List<InstitutionInfoDTO>> all = institutionService
                 .getAllForInfoByPage("1-4");

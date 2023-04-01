@@ -5,6 +5,9 @@ public interface MessageConstants {
     String ERROR_IN_REQUEST_UZ = "So'rovda xato bor";
     String ERROR_IN_REQUEST_RU = "В запросе ошибка";
 
+    String CATEGORY_IS_NULL_UZ = "Kategoriya dtoga map qilishda xatolik";
+    String CATEGORY_IS_NULL_RU = "Категория ошибки сопоставления с dto";
+
     String USER_NOT_FOUND_UZ = "Foydalanuvchi topilmadi";
     String USER_NOT_FOUND_RU = "Пользователь не найден";
 
@@ -16,6 +19,12 @@ public interface MessageConstants {
 
     String INSTITUTION_NOT_FOUND_UZ = "Muassasa topilmadi";
     String INSTITUTION_NOT_FOUND_RU = "Учреждение не найден";
+
+    String CATEGORY_NOT_FOUND_UZ = "Kategoriya topilmadi";
+    String CATEGORY_NOT_FOUND_RU = "Категория не найдена";
+
+    String YOU_HAVE_NO_PERMISSION_UZ = "Sizda ruxsat yo'q";
+    String YOU_HAVE_NO_PERMISSION_RU = "У вас нет разрешения";
 
     String INSTITUTION_TYPE_NOT_FOUND_UZ = "Muassasa turi topilmadi";
     String INSTITUTION_TYPE_NOT_FOUND_RU = "Учреждение иметь не найден";

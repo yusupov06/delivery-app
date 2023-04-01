@@ -16,7 +16,10 @@ import uz.md.shopapp.exceptions.BadRequestException;
 import uz.md.shopapp.exceptions.NotFoundException;
 import uz.md.shopapp.mapper.OrderMapper;
 import uz.md.shopapp.mapper.OrderProductMapper;
-import uz.md.shopapp.repository.*;
+import uz.md.shopapp.repository.OrderProductRepository;
+import uz.md.shopapp.repository.OrderRepository;
+import uz.md.shopapp.repository.ProductRepository;
+import uz.md.shopapp.repository.UserRepository;
 import uz.md.shopapp.service.QueryService;
 import uz.md.shopapp.service.contract.OrderService;
 import uz.md.shopapp.service.contract.TelegramBotService;
@@ -153,6 +156,7 @@ public class OrderServiceImpl implements OrderService {
 
         Long overallPrice = sumOrderOverallPrice(orderProducts);
         order.setOverallPrice(overallPrice);
+
         order.setOrderProducts(orderProducts);
 
         orderRepository.save(order);

@@ -1,6 +1,9 @@
 package uz.md.shopapp.dtos.institution;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import uz.md.shopapp.dtos.category.CategoryDTO;
 import uz.md.shopapp.dtos.user.ManagerDTO;
 

@@ -94,6 +94,7 @@ public class ClientServiceImpl implements ClientService {
                     .messageUz("Siz client emassiz")
                     .messageRu("")
                     .build();
+
         orderRepository.deleteAllByUserId(user.getId());
         return ApiResult.successResponse();
     }

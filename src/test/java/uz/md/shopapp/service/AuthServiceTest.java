@@ -9,6 +9,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import uz.md.shopapp.domain.Role;
 import uz.md.shopapp.domain.User;
 import uz.md.shopapp.dtos.ApiResult;
 import uz.md.shopapp.dtos.TokenDTO;
@@ -51,16 +52,27 @@ public class AuthServiceTest {
     @BeforeEach
     public void init() {
         client = Mock.getMockClient();
-        roleRepository.save(client.getRole());
-        employee = Mock.getEmployeeUser();
-        roleRepository.save(employee.getRole());
+
+        Optional<Role> clientRole = roleRepository.findByName(client.getRole().getName());
+        if (clientRole.isPresent())
+            client.setRole(clientRole.get());
+        else
+            client.setRole(roleRepository.saveAndFlush(client.getRole()));
+
+        employee = Mock.getMockEmployee();
+        Optional<Role> employeeRole = roleRepository.findByName(employee.getRole().getName());
+        if (employeeRole.isPresent())
+            employee.setRole(employeeRole.get());
+        else
+            employee.setRole(roleRepository.saveAndFlush(employee.getRole()));
+
     }
 
     @Test
     void shouldLogin() {
         ClientLoginDTO clientLoginDTO = new ClientLoginDTO(client.getPhoneNumber(), client.getPassword());
         client.setPassword(passwordEncoder.encode(client.getPassword()));
-        User client1 = userRepository.saveAndFlush(client);
+        userRepository.saveAndFlush(client);
         ApiResult<TokenDTO> result = authService.loginClient(clientLoginDTO);
         Assertions.assertNotNull(result);
         TokenDTO data = result.getData();

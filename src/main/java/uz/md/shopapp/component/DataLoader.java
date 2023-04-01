@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import uz.md.shopapp.client.SmsSender;
-import uz.md.shopapp.client.requests.LoginRequest;
 import uz.md.shopapp.domain.*;
 import uz.md.shopapp.domain.enums.PermissionEnum;
 import uz.md.shopapp.repository.*;
@@ -25,7 +24,7 @@ import static uz.md.shopapp.domain.enums.PermissionEnum.*;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@Profile(value = {"test", "dev"})
+@Profile(value = {"test","dev"})
 public class DataLoader implements CommandLineRunner {
 
     private final LocationRepository locationRepository;
@@ -86,11 +85,11 @@ public class DataLoader implements CommandLineRunner {
         filesStorageService.init();
         System.out.println("activeProfile = " + activeProfile);
         if (Objects.equals("create", modeType)) {
-            smsSender.login(LoginRequest
-                    .builder()
-                    .email(senderEmail)
-                    .password(senderPassword)
-                    .build());
+//            smsSender.login(LoginRequest
+//                    .builder()
+//                    .email(senderEmail)
+//                    .password(senderPassword)
+//                    .build());
             addAdmin();
             saveManagerRole();
             saveClientRole();
@@ -119,10 +118,10 @@ public class DataLoader implements CommandLineRunner {
                 productRepository.save(new Product(
                         "nameUz" + i + "-" + j,
                         "NameRu" + i + "-" + j,
-                        "https://th.bing.com/th/id/OIP.dNCYKENMQT0e6qVY3uzTzQHaE7?pid=ImgDet&rs=1",
+                        "",
                         "description",
                         "description",
-                        (long) (Math.round(random.nextLong(100000) * 500) + 100),
+                        (long) (Math.round(random.nextLong() * 500) + 100),
                         categoryRepository.findById(i + 1L).orElseThrow()
                 ));
             }
@@ -146,25 +145,25 @@ public class DataLoader implements CommandLineRunner {
     private void initInstitutions() {
         List<Location> locations = locationRepository.findAll();
         institutionRepository.saveAll(List.of(
-                new Institution("Max Way", "Max Way", "", "","https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
+                new Institution("Max Way", "Max Way", "", "",
                         locations.get(0),
                         institutionTypeRepository.findById(1L).orElseThrow(),
                         userRepository.findById(1L).orElseThrow()
                 ),
 
-                new Institution("Korzinka", "Korzinka", "", "","https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
+                new Institution("Korzinka", "Korzinka", "", "",
                         locations.get(1),
                         institutionTypeRepository.findById(3L).orElseThrow(),
                         userRepository.findById(1L).orElseThrow()
                 ),
 
-                new Institution("Shopping", "Shopping", "", "","https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
+                new Institution("Shopping", "Shopping", "", "",
                         locations.get(2),
                         institutionTypeRepository.findById(4L).orElseThrow(),
                         userRepository.findById(1L).orElseThrow()
                 ),
 
-                new Institution("Moida By Azan", "Moida By Azan", "", "","https://th.bing.com/th/id/OIP.com4sMfga2gwMCziijiREAHaHa?w=178&h=180&c=7&r=0&o=5&pid=1.7",
+                new Institution("Moida By Azan", "Moida By Azan", "", "",
                         locations.get(3),
                         institutionTypeRepository.findById(2L).orElseThrow(),
                         userRepository.findById(1L).orElseThrow()
@@ -214,8 +213,8 @@ public class DataLoader implements CommandLineRunner {
                 lastName,
                 phoneNumber,
                 passwordEncoder.encode(password),
-                addAdminRole(),
-                1345758544L));
+                addAdminRole()
+        ));
     }
 
     private @NotNull Role addAdminRole() {

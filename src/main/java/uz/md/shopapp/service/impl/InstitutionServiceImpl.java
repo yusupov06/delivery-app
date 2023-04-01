@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uz.md.shopapp.domain.Institution;
+import uz.md.shopapp.domain.InstitutionType;
 import uz.md.shopapp.domain.User;
 import uz.md.shopapp.dtos.ApiResult;
 import uz.md.shopapp.dtos.institution.InstitutionAddDTO;
@@ -19,6 +20,7 @@ import uz.md.shopapp.exceptions.NotFoundException;
 import uz.md.shopapp.mapper.InstitutionMapper;
 import uz.md.shopapp.repository.InstitutionRepository;
 import uz.md.shopapp.repository.InstitutionTypeRepository;
+import uz.md.shopapp.repository.LocationRepository;
 import uz.md.shopapp.repository.UserRepository;
 import uz.md.shopapp.service.contract.FilesStorageService;
 import uz.md.shopapp.service.contract.InstitutionService;
@@ -46,17 +48,20 @@ public class InstitutionServiceImpl implements InstitutionService {
     private final FilesStorageService filesStorageService;
     private final UserRepository userRepository;
     private final InstitutionTypeRepository institutionTypeRepository;
+    private final LocationRepository locationRepository;
 
     public InstitutionServiceImpl(InstitutionRepository institutionRepository,
                                   InstitutionMapper institutionMapper,
                                   FilesStorageService filesStorageService,
                                   UserRepository userRepository,
-                                  InstitutionTypeRepository institutionTypeRepository) {
+                                  InstitutionTypeRepository institutionTypeRepository,
+                                  LocationRepository locationRepository) {
         this.institutionRepository = institutionRepository;
         this.institutionMapper = institutionMapper;
         this.filesStorageService = filesStorageService;
         this.userRepository = userRepository;
         this.institutionTypeRepository = institutionTypeRepository;
+        this.locationRepository = locationRepository;
     }
 
     @Override
@@ -81,11 +86,14 @@ public class InstitutionServiceImpl implements InstitutionService {
         Institution institution = institutionMapper
                 .fromAddDTO(dto);
 
-        institutionTypeRepository.findById(dto.getInstitutionTypeId())
+        InstitutionType institutionType = institutionTypeRepository.findById(dto.getInstitutionTypeId())
                 .orElseThrow(() -> NotFoundException.builder()
                         .messageUz(INSTITUTION_TYPE_NOT_FOUND_UZ)
                         .messageRu(INSTITUTION_TYPE_NOT_FOUND_RU)
                         .build());
+        institution.setType(institutionType);
+
+        locationRepository.saveAndFlush(institution.getLocation());
 
         User manager = userRepository
                 .findById(dto.getManagerId())

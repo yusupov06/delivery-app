@@ -29,9 +29,11 @@ import uz.md.shopapp.mapper.UserMapper;
 import uz.md.shopapp.repository.RoleRepository;
 import uz.md.shopapp.repository.UserRepository;
 import uz.md.shopapp.service.contract.AuthService;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+
 import static uz.md.shopapp.utils.MessageConstants.*;
 
 @Service
@@ -300,7 +302,7 @@ public class AuthServiceImpl implements AuthService {
                         "http://localhost:8090/" + AuthController.BASE_URL + "/client/sign-in");
 //        smsSender.sendSms(sendRequest);
         userRepository.save(user);
-        return ApiResult.successResponse("SMS kod jo'natildi");
+        return ApiResult.successResponse("SMS kod jo'natildi: " + smsCode);
     }
 
     @Override

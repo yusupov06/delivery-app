@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uz.md.shopapp.domain.Category;
 import uz.md.shopapp.domain.Institution;
 import uz.md.shopapp.domain.User;
+import uz.md.shopapp.domain.enums.PermissionEnum;
 import uz.md.shopapp.dtos.ApiResult;
 import uz.md.shopapp.dtos.category.CategoryAddDTO;
 import uz.md.shopapp.dtos.category.CategoryDTO;
@@ -23,8 +24,7 @@ import uz.md.shopapp.utils.CommonUtils;
 
 import java.util.List;
 
-import static uz.md.shopapp.utils.MessageConstants.ERROR_IN_REQUEST_RU;
-import static uz.md.shopapp.utils.MessageConstants.ERROR_IN_REQUEST_UZ;
+import static uz.md.shopapp.utils.MessageConstants.*;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -64,8 +64,12 @@ public class CategoryServiceImpl implements CategoryService {
                         .messageRu("Объект не найден")
                         .build());
 
-        if (!currentUser.getRole().getName().equals("ADMIN"))
-            if (!institution.getManager().getId().equals(currentUser.getId()))
+        if (currentUser != null
+                && currentUser.getRole() != null
+                && !currentUser.getRole().getPermissions().contains(PermissionEnum.ADD_CATEGORY))
+            if (institution.getManager() != null
+                    && institution.getManager().getId() != null
+                    && !institution.getManager().getId().equals(currentUser.getId()))
                 throw NotAllowedException.builder()
                         .messageUz("Sizda ruxsat yo'q")
                         .messageRu("У вас нет разрешения")
@@ -80,6 +84,12 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = categoryMapper
                 .fromAddDTO(dto);
+
+        if (category == null)
+            throw BadRequestException.builder()
+                    .messageUz(CATEGORY_IS_NULL_UZ)
+                    .messageRu(CATEGORY_IS_NULL_RU)
+                    .build();
 
         category.setInstitution(institution);
 
@@ -122,23 +132,23 @@ public class CategoryServiceImpl implements CategoryService {
         Institution institution = institutionRepository
                 .findById(editDTO.getInstitutionId())
                 .orElseThrow(() -> NotFoundException.builder()
-                        .messageUz("Muassasa topilmadi")
-                        .messageRu("Объект не найден")
+                        .messageUz(INSTITUTION_NOT_FOUND_UZ)
+                        .messageRu(INSTITUTION_NOT_FOUND_RU)
                         .build());
 
         if (!currentUser.getRole().getName().equals("ADMIN"))
             if (!institution.getManager().getId().equals(currentUser.getId()))
                 throw NotAllowedException
                         .builder()
-                        .messageUz("Sizda ruxsat yo'q")
-                        .messageRu("У вас нет разрешения")
+                        .messageUz(YOU_HAVE_NO_PERMISSION_UZ)
+                        .messageRu(YOU_HAVE_NO_PERMISSION_RU)
                         .build();
 
         Category editing = categoryRepository
                 .findById(editDTO.getId())
                 .orElseThrow(() -> NotFoundException.builder()
-                        .messageUz("Kategoriya topilmadi")
-                        .messageRu("Категория не найдена")
+                        .messageUz(CATEGORY_NOT_FOUND_UZ)
+                        .messageRu(CATEGORY_NOT_FOUND_RU)
                         .build());
 
         if (categoryRepository

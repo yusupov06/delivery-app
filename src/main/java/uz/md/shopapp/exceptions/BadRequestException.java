@@ -1,6 +1,5 @@
 package uz.md.shopapp.exceptions;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 @Builder
